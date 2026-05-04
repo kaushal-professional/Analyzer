@@ -1,0 +1,12 @@
+# Fyers API
+fyers-apiv3
+pyotp
+requests
+python-dotenv
+tzdata
+
+# gRPC
+grpcio>=1.60.0
+grpcio-tools>=1.60.0
+grpcio-reflection>=1.60.0
+

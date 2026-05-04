@@ -1,0 +1,190 @@
+syntax = "proto3";
+
+package fyers;
+
+// ============================================================
+// Common messages
+// ============================================================
+
+message Empty {}
+
+message ErrorResponse {
+  string error = 1;
+}
+
+// ============================================================
+// Auth Service
+// ============================================================
+
+message TokenResponse {
+  string access_token = 1;
+}
+
+message ProfileResponse {
+  string name = 1;
+  string fy_id = 2;
+  string email = 3;
+  string pan = 4;
+}
+
+service AuthService {
+  rpc GetToken(Empty) returns (TokenResponse);
+  rpc RefreshToken(Empty) returns (TokenResponse);
+  rpc GetProfile(Empty) returns (ProfileResponse);
+}
+
+// ============================================================
+// Market Service
+// ============================================================
+
+message QuotesRequest {
+  repeated string symbols = 1;
+}
+
+message QuotesResponse {
+  string data_json = 1;
+}
+
+message OptionChainRequest {
+  string symbol = 1;
+  int32 strike_count = 2;
+}
+
+message OptionChainResponse {
+  string data_json = 1;
+}
+
+message MarketDepthRequest {
+  string symbol = 1;
+}
+
+message MarketDepthResponse {
+  string data_json = 1;
+}
+
+message HistoricalDataRequest {
+  string symbol = 1;
+  string resolution = 2;
+  string from_date = 3;
+  string to_date = 4;
+}
+
+message HistoricalDataResponse {
+  string data_json = 1;
+}
+
+service MarketService {
+  rpc GetQuotes(QuotesRequest) returns (QuotesResponse);
+  rpc GetOptionChain(OptionChainRequest) returns (OptionChainResponse);
+  rpc GetMarketDepth(MarketDepthRequest) returns (MarketDepthResponse);
+  rpc GetHistoricalData(HistoricalDataRequest) returns (HistoricalDataResponse);
+}
+
+// ============================================================
+// Order Service
+// ============================================================
+
+message PlaceOrderRequest {
+  string symbol = 1;
+  int32 qty = 2;
+  int32 side = 3;
+  int32 order_type = 4;
+  string product_type = 5;
+  double limit_price = 6;
+  double stop_price = 7;
+  int32 disclosed_qty = 8;
+  string validity = 9;
+  bool offline_order = 10;
+}
+
+message ModifyOrderRequest {
+  string order_id = 1;
+  int32 qty = 2;
+  int32 order_type = 3;
+  double limit_price = 4;
+  double stop_price = 5;
+}
+
+message CancelOrderRequest {
+  string order_id = 1;
+}
+
+message OrderResponse {
+  string data_json = 1;
+}
+
+message OrderBookResponse {
+  string data_json = 1;
+}
+
+message TradeBookResponse {
+  string data_json = 1;
+}
+
+message PositionsResponse {
+  string data_json = 1;
+}
+
+message HoldingsResponse {
+  string data_json = 1;
+}
+
+message FundsResponse {
+  string data_json = 1;
+}
+
+service OrderService {
+  rpc PlaceOrder(PlaceOrderRequest) returns (OrderResponse);
+  rpc ModifyOrder(ModifyOrderRequest) returns (OrderResponse);
+  rpc CancelOrder(CancelOrderRequest) returns (OrderResponse);
+  rpc GetOrderBook(Empty) returns (OrderBookResponse);
+  rpc GetTradeBook(Empty) returns (TradeBookResponse);
+  rpc GetPositions(Empty) returns (PositionsResponse);
+  rpc GetHoldings(Empty) returns (HoldingsResponse);
+  rpc GetFunds(Empty) returns (FundsResponse);
+}
+
+// ============================================================
+// Compute Service
+// ============================================================
+
+message ComputeRequest {
+  string symbol = 1;
+}
+
+message PCRResponse {
+  string symbol = 1;
+  double pcr = 2;
+  int64 total_put_oi = 3;
+  int64 total_call_oi = 4;
+  string signal = 5;
+}
+
+message MaxPainResponse {
+  string symbol = 1;
+  double max_pain_strike = 2;
+  double current_price = 3;
+  double deviation_pct = 4;
+  bool within_buffer = 5;
+}
+
+message DeliveryResponse {
+  string symbol = 1;
+  int64 volume = 2;
+  double delivery_pct = 3;
+  string signal = 4;
+}
+
+message ConvictionResponse {
+  string symbol = 1;
+  double conviction_score = 2;
+  string signals_json = 3;
+  string verdict = 4;
+}
+
+service ComputeService {
+  rpc ComputePCR(ComputeRequest) returns (PCRResponse);
+  rpc ComputeMaxPain(ComputeRequest) returns (MaxPainResponse);
+  rpc ComputeDelivery(ComputeRequest) returns (DeliveryResponse);
+  rpc ComputeConviction(ComputeRequest) returns (ConvictionResponse);
+}
