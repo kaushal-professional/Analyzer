@@ -1,12 +1,19 @@
+# Mirrors the runtime dependencies in pyproject.toml.
+# Used by Render's default Python builder (`pip install -r requirements.txt`)
+# and any other environment that doesn't run uv. Keep version pins in sync
+# with pyproject.toml.
+
 # Fyers API
-fyers-apiv3
-pyotp
-requests
-python-dotenv
-tzdata
+fyers-apiv3>=3.1.12
+pyotp>=2.9.0
+requests>=2.31.0
+
+# Config & TLS
+python-dotenv>=1.2.2
+truststore>=0.10.0
+tzdata>=2024.1
 
 # gRPC
 grpcio>=1.60.0
-grpcio-tools>=1.60.0
 grpcio-reflection>=1.60.0
-
+grpcio-tools>=1.60.0
